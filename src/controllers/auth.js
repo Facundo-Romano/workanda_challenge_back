@@ -13,7 +13,7 @@ const authController = {
 				userId
 			});
 		} catch (err) {
-			return handleErrorResponse(err, res);
+			handleErrorResponse(err, res);
 		}
 	},
 	login: async function (req, res) {
@@ -27,7 +27,7 @@ const authController = {
 				userId
 			});
 		} catch (err) {
-			return handleErrorResponse(err, res);
+			handleErrorResponse(err, res);
 		}
 	}
 };

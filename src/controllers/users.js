@@ -11,7 +11,7 @@ const usersController = {
 				users
 			});
 		} catch (err) {
-			return handleErrorResponse(err, res);
+			handleErrorResponse(err, res);
 		}
 	},
 	update: async function (req, res) {
@@ -25,7 +25,7 @@ const usersController = {
 				id
 			});
 		} catch (err) {
-			return handleErrorResponse(err, res);
+			handleErrorResponse(err, res);
 		}
 	},
 	delete: async function (req, res) {
@@ -39,7 +39,7 @@ const usersController = {
 				id,
 			});
 		} catch (err) {
-			return handleErrorResponse(err, res);
+			handleErrorResponse(err, res);
 		}
 	}
 };
