@@ -5,19 +5,22 @@ const authController = {
 	register: async function (req, res) {
 		try {
 			const { email, password } = req.body;
+			const emailValidationRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-			const user = usersRepository.createEntity({
+			if (!emailValidationRegex.test(email)) throw new Error('Invalid email');
+
+			const hashedPassword = await bcrypt.hash(password, 10);
+
+			const user = await users.create({
 				email,
-				password,
-				createdAt: Date.now(),
-				updatedAt: Date.now(),
+				password: hashedPassword,
+				created_at: new Date(),
+				updated_at: new Date()
 			});
-
-			const id = await usersRepository.save(user);
 
 			return res.status(200).json({
 				success: true,
-				id,
+				userId: user.id
 			});
 		} catch (err) {
 			const { status, message } = err;
