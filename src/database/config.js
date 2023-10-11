@@ -25,4 +25,4 @@ users.sync()
 	throw new Error(err);
 });
 
-export default sequelize;
+export { sequelize, users };

@@ -1,3 +1,6 @@
+import bcrypt from 'bcrypt';
+import { users } from '../database/config.js';
+
 const authController = {
 	register: async function (req, res) {
 		try {
@@ -29,9 +32,18 @@ const authController = {
 		try {
 			const { email, password } = req.body;
 
+			const hashedPassword = await bcrypt.hash(password, 10);
+
+			const user = await users.create({
+				email,
+				password: hashedPassword,
+				created_at: new Date(),
+				updated_at: new Date()
+			});
+
 			return res.status(200).json({
 				success: true,
-				id,
+				userId: user.id
 			});
 		} catch (err) {
 			const { status, message } = err;

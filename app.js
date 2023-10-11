@@ -2,7 +2,7 @@ import express from 'express';
 import routes from './src/routes/index.js';
 import cors from 'cors';
 import 'dotenv/config.js';
-import sequelize from './src/database/config.js';
+import { sequelize } from './src/database/config.js';
 
 const app = express();
 const port = 3000;

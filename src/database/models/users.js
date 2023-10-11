@@ -4,8 +4,9 @@ const users = (sequelize, DataTypes) => {
 	const cols = {
 		id: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
 			primaryKey: true,
+			autoIncrement: true,
+			allowNull: false,
 		},
 		email: {
 			type: DataTypes.STRING,
@@ -19,6 +20,9 @@ const users = (sequelize, DataTypes) => {
 
 	const config = {
 		tableName: 'users',
+		timestamps: true, 
+		createdAt: 'created_at', 
+		updatedAt: 'updated_at'
 	};
 
 	const Users = sequelize.define(alias, cols, config);
