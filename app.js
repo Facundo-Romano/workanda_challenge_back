@@ -2,6 +2,7 @@ import express from 'express';
 import routes from './src/routes/index.js';
 import cors from 'cors';
 import 'dotenv/config.js';
+import sequelize from './src/database/config.js';
 
 const app = express();
 const port = 3000;
@@ -17,6 +18,17 @@ const corsOptions = {
   }
 };
 
+
+//Sequelize connection
+sequelize.authenticate()
+.then(() => {
+	console.log('Db connected successfully')
+})
+.catch((err) => {
+	console.log('Error connecting to db')
+	throw new Error(err);		
+});
+
 //CORS options
 app.use(cors(corsOptions));
 app.options('*', cors())
@@ -31,4 +43,5 @@ app.use('/', routes);
 
 app.listen(port, () => {
 	console.log(`Server listening on ${port}`);
+  console.log('Connecting to db...');
 });

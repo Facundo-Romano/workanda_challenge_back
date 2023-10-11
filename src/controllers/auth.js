@@ -1,5 +1,3 @@
-import { usersRepository } from '../database/models/index.js';
-
 const authController = {
 	register: async function (req, res) {
 		try {

@@ -1,20 +1,29 @@
-import { Schema, Entity } from 'redis-om';
-import client from '../config.js';
-class Banner extends Entity {}
+const users = (sequelize, DataTypes) => {
+	const alias = 'user';
 
-const bannerSchema = new Schema(Banner, {
-	nameDesktop: { type: 'string' },
-	nameMobile: { type: 'string' },
-	link: { type: 'string' },
-	blank: { type: 'boolean' },
-	category: { type: 'string' },
-	order: { type: 'number' },
-	active: { type: 'boolean' },
-	createdAt: { type: 'number' },
-	updatedAt: { type: 'number' },
-});
+	const cols = {
+		id: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			primaryKey: true,
+		},
+		email: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
+		password: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
+	};
 
-const bannerRepository = client.fetchRepository(bannerSchema);
+	const config = {
+		tableName: 'users',
+	};
 
-await bannerRepository.createIndex();
-export default bannerRepository;
+	const Users = sequelize.define(alias, cols, config);
+
+	return Users;
+};
+
+export default users;
