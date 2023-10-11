@@ -5,7 +5,7 @@ import 'dotenv/config.js';
 import { sequelize } from './src/database/config.js';
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 const allowedOrigins = ['https://example.com', 'http://localhost:3000'];
 const corsOptions = {
