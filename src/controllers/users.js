@@ -1,3 +1,4 @@
+import handleErrorResponse from "../functions/handleErrorResponse.js";
 import usersService from "../service/users.js";
 
 const usersController = {
@@ -10,12 +11,7 @@ const usersController = {
 				users
 			});
 		} catch (err) {
-			const { status, message } = err;
-
-			return res.status(status || 500).json({
-				success: false,
-				message,
-			});
+			return handleErrorResponse(err, res);
 		}
 	},
 	update: async function (req, res) {
@@ -29,12 +25,7 @@ const usersController = {
 				id
 			});
 		} catch (err) {
-			const { status, message } = err;
-
-			return res.status(status || 500).json({
-				success: false,
-				message,
-			});
+			return handleErrorResponse(err, res);
 		}
 	},
 	delete: async function (req, res) {
@@ -48,12 +39,7 @@ const usersController = {
 				id,
 			});
 		} catch (err) {
-			const { status, message } = err;
-
-			return res.status(status || 500).json({
-				success: false,
-				message,
-			});
+			return handleErrorResponse(err, res);
 		}
 	}
 };

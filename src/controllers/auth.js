@@ -1,3 +1,4 @@
+import handleErrorResponse from "../functions/handleErrorResponse.js";
 import authService from "../service/auth.js";
 
 const authController = {
@@ -12,12 +13,7 @@ const authController = {
 				userId
 			});
 		} catch (err) {
-			const { status, message } = err;
-
-			return res.status(status || 500).json({
-				success: false,
-				message,
-			});
+			return handleErrorResponse(err, res);
 		}
 	},
 	login: async function (req, res) {
@@ -31,12 +27,7 @@ const authController = {
 				userId
 			});
 		} catch (err) {
-			const { status, message } = err;
-
-			return res.status(status || 500).json({
-				success: false,
-				message,
-			});
+			return handleErrorResponse(err, res);
 		}
 	}
 };
