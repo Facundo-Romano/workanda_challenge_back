@@ -1,42 +1,15 @@
-import bcrypt from 'bcrypt';
-import { users as UserModel } from '../database/config.js';
+import authService from "../service/auth.js";
 
 const authController = {
 	register: async function (req, res) {
 		try {
 			const { email, password } = req.body;
-			const emailValidationRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-			if (!emailValidationRegex.test(email)) {
-				const error = new Error('Invalid email');
-				error.status = 400;
-				throw error;
-			};
-
-			const user = await UserModel.findOne({
-				where: {
-				  email
-				}
-			});
-
-			if (user) {
-				const error = new Error('Email already in use');
-				error.status = 400;
-				throw error;
-			};
-
-			const hashedPassword = await bcrypt.hash(password, 10);
-
-			const newUser = await UserModel.create({
-				email,
-				password: hashedPassword,
-				created_at: new Date(),
-				updated_at: new Date()
-			});
+			
+			const userId = await authService.register(email, password);
 
 			return res.status(200).json({
 				success: true,
-				userId: newUser.id
+				userId
 			});
 		} catch (err) {
 			const { status, message } = err;
@@ -51,29 +24,11 @@ const authController = {
 		try {
 			const { email, password } = req.body;
 
-			const user = await UserModel.findOne({
-				where: {
-				  email
-				},
-			});
-
-			if (!user) {
-				const error = new Error('User nor found');
-				error.status = 404;
-				throw error;
-			};
-
-			const passwordIsValid = await bcrypt.compare(password, user.password);
-
-			if (!passwordIsValid) {
-				const error = new Error('Incorrect password');
-				error.status = 401;
-				throw error;
-			};
+			const userId = await authService.login(email, password);
 
 			return res.status(200).json({
 				success: true,
-				userId: user.id
+				userId
 			});
 		} catch (err) {
 			const { status, message } = err;
