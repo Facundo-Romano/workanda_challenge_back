@@ -7,7 +7,23 @@ const authController = {
 			const { email, password } = req.body;
 			const emailValidationRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-			if (!emailValidationRegex.test(email)) throw new Error('Invalid email');
+			if (!emailValidationRegex.test(email)) {
+				const error = new Error('Invalid email');
+				error.status = 400;
+				throw error;
+			}
+
+			const existingUser = await users.findOne({
+				where: {
+				  email
+				},
+			});
+
+			if (existingUser) {
+				const error = new Error('Email already in use');
+				error.status = 400;
+				throw error;
+			}
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -37,11 +53,10 @@ const authController = {
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
-			const user = await users.create({
-				email,
-				password: hashedPassword,
-				created_at: new Date(),
-				updated_at: new Date()
+			const user = await users.findOne({
+				where: {
+				  email
+				},
 			});
 
 			return res.status(200).json({
