@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { users as UserModel } from '../database/config.js';
+import usersRepository from '../repository/users.js';
 
 const authService = {
     register: async (email, password) => {
@@ -11,11 +11,7 @@ const authService = {
             throw error;
         };
 
-        const user = await UserModel.findOne({
-            where: {
-                email
-            }
-        });
+        const user = await usersRepository.getByEmail(email);
 
         if (user) {
             const error = new Error('Email already in use');
@@ -25,21 +21,12 @@ const authService = {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = await UserModel.create({
-            email,
-            password: hashedPassword,
-            created_at: new Date(),
-            updated_at: new Date()
-        });
+        const newUser = await usersRepository.create(email, hashedPassword);
 
         return newUser.id;
     },
     login: async (email, password) => {
-        const user = await UserModel.findOne({
-            where: {
-              email
-            },
-        });
+        const user = await usersRepository.getByEmail(email);
 
         if (!user) {
             const error = new Error('User nor found');

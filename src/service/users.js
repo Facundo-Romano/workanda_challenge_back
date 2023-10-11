@@ -1,8 +1,8 @@
-import { users as UserModel } from '../database/config.js';
+import usersRepository from "../repository/users.js";
 
 const usersService = {
     getAll: async () => {
-		const users = await UserModel.findAll();
+		const users = await usersRepository.getAll();
 
         const filteredUsers = users.map((user) => {
             return {
@@ -14,11 +14,7 @@ const usersService = {
         return filteredUsers;
     },
     update: async (id, email) => {
-        const user = await UserModel.findOne({
-            where: {
-              id
-            }
-        });
+        const user = await usersRepository.getById(id);
 
         if (!user) {
             const error = new Error('User not found');
@@ -26,16 +22,10 @@ const usersService = {
             throw error;
         };
 
-        user.set({ email });
-
-        await user.save();
+        await usersRepository.update(user, email);
     },
     delete: async (id) => {
-        const user = await UserModel.findOne({
-            where: {
-              id
-            }
-        });
+        const user = await usersRepository.getById(id);
 
         if (!user) {
             const error = new Error('User not found');
@@ -43,7 +33,7 @@ const usersService = {
             throw error;
         };
         
-        await user.destroy();
+        await usersRepository.delete(user);
     }
 };
 
