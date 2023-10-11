@@ -11,7 +11,7 @@ const authController = {
 				const error = new Error('Invalid email');
 				error.status = 400;
 				throw error;
-			}
+			};
 
 			const existingUser = await users.findOne({
 				where: {
@@ -23,7 +23,7 @@ const authController = {
 				const error = new Error('Email already in use');
 				error.status = 400;
 				throw error;
-			}
+			};
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -51,13 +51,25 @@ const authController = {
 		try {
 			const { email, password } = req.body;
 
-			const hashedPassword = await bcrypt.hash(password, 10);
-
 			const user = await users.findOne({
 				where: {
 				  email
 				},
 			});
+
+			if (!user) {
+				const error = new Error('User nor found');
+				error.status = 404;
+				throw error;
+			};
+
+			const passwordIsValid = await bcrypt.compare(password, user.password);
+
+			if (!passwordIsValid) {
+				const error = new Error('Incorrect password');
+				error.status = 401;
+				throw error;
+			};
 
 			return res.status(200).json({
 				success: true,
