@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { users } from '../database/config.js';
+import { users as UserModel } from '../database/config.js';
 
 const authController = {
 	register: async function (req, res) {
@@ -13,13 +13,13 @@ const authController = {
 				throw error;
 			};
 
-			const existingUser = await users.findOne({
+			const user = await UserModel.findOne({
 				where: {
 				  email
-				},
+				}
 			});
 
-			if (existingUser) {
+			if (user) {
 				const error = new Error('Email already in use');
 				error.status = 400;
 				throw error;
@@ -27,7 +27,7 @@ const authController = {
 
 			const hashedPassword = await bcrypt.hash(password, 10);
 
-			const user = await users.create({
+			const newUser = await UserModel.create({
 				email,
 				password: hashedPassword,
 				created_at: new Date(),
@@ -36,7 +36,7 @@ const authController = {
 
 			return res.status(200).json({
 				success: true,
-				userId: user.id
+				userId: newUser.id
 			});
 		} catch (err) {
 			const { status, message } = err;
@@ -51,7 +51,7 @@ const authController = {
 		try {
 			const { email, password } = req.body;
 
-			const user = await users.findOne({
+			const user = await UserModel.findOne({
 				where: {
 				  email
 				},
