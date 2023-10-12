@@ -12,6 +12,12 @@ const authService = {
             throw error;
         };
 
+        if (!password) {
+            const error = new Error('Invalid password');
+            error.status = 400;
+            throw error;
+        };
+
         const user = await usersRepository.getByEmail(email);
 
         if (user) {
