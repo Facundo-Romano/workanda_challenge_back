@@ -6,11 +6,11 @@ const authController = {
 		try {
 			const { email, password } = req.body;
 			
-			const userId = await authService.register(email, password);
+			const token = await authService.register(email, password);
 
 			return res.status(200).json({
 				success: true,
-				userId
+				token
 			});
 		} catch (err) {
 			handleErrorResponse(err, res);
@@ -20,11 +20,11 @@ const authController = {
 		try {
 			const { email, password } = req.body;
 
-			const userId = await authService.login(email, password);
+			const token = await authService.login(email, password);
 
 			return res.status(200).json({
 				success: true,
-				userId
+				token
 			});
 		} catch (err) {
 			handleErrorResponse(err, res);

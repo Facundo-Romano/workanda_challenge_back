@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import usersRepository from '../repository/users.js';
+import generateJwt from '../functions/generateJwt.js';
 
 const authService = {
     register: async (email, password) => {
@@ -23,7 +24,9 @@ const authService = {
 
         const newUser = await usersRepository.create(email, hashedPassword);
 
-        return newUser.id;
+        const jwt = generateJwt({ id: newUser.id, email });
+
+        return jwt;
     },
     login: async (email, password) => {
         const user = await usersRepository.getByEmail(email);
@@ -42,7 +45,9 @@ const authService = {
             throw error;
         };
 
-        return user.id;
+        const jwt = generateJwt({ id: user.id, email });
+
+        return jwt;
     }
 };
 
