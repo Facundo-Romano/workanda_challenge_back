@@ -3,11 +3,12 @@ import routes from './src/routes/index.js';
 import cors from 'cors';
 import 'dotenv/config.js';
 import { sequelize } from './src/database/config.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-const allowedOrigins = ['https://example.com', 'http://localhost:3000'];
+const allowedOrigins = ['https://example.com', 'http://localhost:5173'];
 const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -34,6 +35,7 @@ app.use(cors(corsOptions));
 app.options('*', cors())
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
