@@ -22,9 +22,15 @@ const usersService = {
             throw error;
         };
 
+        if (user.email === email) {
+            const error = new Error('Email already in use');
+            error.status = 404;
+            throw error;
+        };
+
         await usersRepository.update(user, email);
     },
-    delete: async (id) => {
+    delete: async (id, tokenUser) => {
         const user = await usersRepository.getById(id);
 
         if (!user) {
@@ -34,6 +40,8 @@ const usersService = {
         };
         
         await usersRepository.delete(user);
+
+        return id == tokenUser.id;
     }
 };
 

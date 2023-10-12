@@ -31,12 +31,14 @@ const usersController = {
 	delete: async function (req, res) {
 		try {
 			const { id } = req.params;
+			const user = req.user;
 
-			await usersService.delete(id);
+			const isOwnUser = await usersService.delete(id, user);
 
 			return res.status(200).json({
 				success: true,
 				id,
+				isOwnUser
 			});
 		} catch (err) {
 			handleErrorResponse(err, res);
