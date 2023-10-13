@@ -1,30 +1,18 @@
 import bcrypt from 'bcrypt';
 import usersRepository from '../repository/users.js';
 import generateJwt from '../functions/generateJwt.js';
+import validateEmail from '../functions/validations/validateEmail.js';
+import validatePassword from '../functions/validations/validatePassword.js';
+import throwError from '../functions/throwError.js';
 
 const authService = {
     register: async (email, password) => {
-        const emailValidationRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-        if (!emailValidationRegex.test(email)) {
-            const error = new Error('Invalid email');
-            error.status = 400;
-            throw error;
-        };
-
-        if (!password) {
-            const error = new Error('Invalid password');
-            error.status = 400;
-            throw error;
-        };
+        validateEmail(email);
+        validatePassword(password);
 
         const user = await usersRepository.getByEmail(email);
 
-        if (user) {
-            const error = new Error('Email already in use');
-            error.status = 400;
-            throw error;
-        };
+        if (user) throwError('Email already in use', 400);
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -37,19 +25,11 @@ const authService = {
     login: async (email, password) => {
         const user = await usersRepository.getByEmail(email);
 
-        if (!user) {
-            const error = new Error('User nor found');
-            error.status = 404;
-            throw error;
-        };
+        if (!user) throwError('User not found', 404);
 
         const passwordIsValid = await bcrypt.compare(password, user.password);
 
-        if (!passwordIsValid) {
-            const error = new Error('Incorrect password');
-            error.status = 401;
-            throw error;
-        };
+        if (!passwordIsValid) throwError('Incorrect password', 401);
 
         const jwt = generateJwt({ id: user.id, email });
 
