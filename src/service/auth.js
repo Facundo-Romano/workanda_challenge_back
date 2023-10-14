@@ -25,11 +25,11 @@ const authService = {
     login: async (email, password) => {
         const user = await usersRepository.getByEmail(email);
 
-        if (!user) throwError('User not found', 404);
+        if (!user) throwError('Incorrect credentials', 404);
 
         const passwordIsValid = await bcrypt.compare(password, user.password);
 
-        if (!passwordIsValid) throwError('Incorrect password', 401);
+        if (!passwordIsValid) throwError('Incorrect credentials', 404);
 
         const jwt = generateJwt({ id: user.id, email });
 
