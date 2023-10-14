@@ -24,7 +24,9 @@ const usersService = {
 
         if (!user) throwError('User not found', 404);
 
-        if (user.email === email) throwError('Email already in use', 400);
+        const userByEmail = await usersRepository.getByEmail(email);
+
+        if (userByEmail) throwError('Email already in use', 400);
 
         await usersRepository.update(user, email);
     },
