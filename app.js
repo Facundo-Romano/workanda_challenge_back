@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser';
 const app = express();
 const port = process.env.PORT || 5000;
 
-const allowedOrigins = ['https://example.com', 'http://localhost:5173'];
+const allowedOrigins = ['https://workanda-challenge-front.vercel.app/'];
 const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
